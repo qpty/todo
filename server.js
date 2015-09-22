@@ -16,6 +16,10 @@ app.use(bodyParser.json());                                     // parse applica
 app.use(bodyParser.json({ type: 'application/vnd.api+json' })); // parse application/vnd.api+json as json
 app.use(methodOverride());
 
+app.set('port', process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 8080);
+app.set('ip', process.env.OPENSHIFT_NODEJS_IP || "localhost");
+
+
  // define model =================
 var Todo = mongoose.model('Todo', {
 	text : String
@@ -82,5 +86,7 @@ app.get('*', function(req, res) {
 });
 
 // listen (start app with node server.js) ======================================
-app.listen(8080);
+app.listen(app.get('port') ,app.get('ip'), function () {
+    console.log("✔ Express server listening at %s:%d ", app.get('ip'),app.get('port'));
+});
 console.log("App listening on port 8080");
