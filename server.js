@@ -4,6 +4,8 @@ var mongoose = require('mongoose');                     // mongoose for mongodb
 var morgan = require('morgan');             // log requests to the console (express4)
 var bodyParser = require('body-parser');    // pull information from HTML POST (express4)
 var methodOverride = require('method-override'); // simulate DELETE and PUT (express4)
+var server_port = process.env.OPENSHIFT_NODEJS_PORT || 8080
+var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1'
 
 // configuration =================
 
@@ -15,10 +17,6 @@ app.use(bodyParser.urlencoded({'extended':'true'}));            // parse applica
 app.use(bodyParser.json());                                     // parse application/json
 app.use(bodyParser.json({ type: 'application/vnd.api+json' })); // parse application/vnd.api+json as json
 app.use(methodOverride());
-
-app.set('port', process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 8080);
-app.set('ip', process.env.OPENSHIFT_NODEJS_IP || "localhost");
-
 
  // define model =================
 var Todo = mongoose.model('Todo', {
@@ -86,7 +84,6 @@ app.get('*', function(req, res) {
 });
 
 // listen (start app with node server.js) ======================================
-app.listen(app.get('port') ,app.get('ip'), function () {
-    console.log("✔ Express server listening at %s:%d ", app.get('ip'),app.get('port'));
+app.listen(server_port, server_ip_address, function () {
+    console.log("✔ Express server listening at %s:%d ", server_ip_address, server_port);
 });
-console.log("App listening on port 8080");
